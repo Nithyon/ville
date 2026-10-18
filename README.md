@@ -9,6 +9,54 @@ The submission deck describes the plan; this repository holds the working core a
 What exists today is a faithful CPU implementation of the detector plus a synthetic test bed.
 The real-model replay harness is the next milestone (see Status).
 
+**Team REIGN** — Chittimilla Saitarun · SaiNithin Pokala · CyberForge 2026
+Submission deck: [`docs/VILLE_Team_REIGN_Ideation.pptx`](docs/VILLE_Team_REIGN_Ideation.pptx)
+
+## Paper summary (brief)
+
+*Anytime-valid detection of LLM weight exfiltration* — Ortega-Fernandez, Kowalczyk, Warr (MATS Research, NASK,
+Anthropic), arXiv:2610.11843, oral at the NeurIPS 2026 workshop "E-Values: From Statistics to ML".
+
+- **Threat.** A compromised inference server can leak model weights, private prompts or any data by using different
+  plausible next tokens to represent payload bits. The output channel can be monitored and rate-limited, but not closed.
+- **Defence.** The model owner replays each prompt on a trusted verifier with the committed sampling seed
+  (Gumbel–Max). The seed prescribes one token per position; a different served token is a *mismatch*.
+- **Obstacle.** GPU non-associativity causes benign mismatches: 41.2–87.2% of honest responses contain at least one.
+  Benign mismatches concentrate at near-ties (10–40% of tokens in the tightest margin cell, <0.1% in the widest).
+- **Method.** For each response, 7 nested binary events "a mismatch at seeded margin ≥ b_m". Their benign rates are
+  bounded with Clopper–Pearson on trusted traffic. A betting e-process (KT estimator, growth-optimal bet, cap c = 0.5)
+  multiplies evidence after every response; the 7 components are averaged. Alarm when evidence ≥ 1/α = 200.
+  Ville's inequality bounds the chance of *ever* false-alarming by α + γ = 1%, over an unbounded horizon.
+- **Results** (Llama-3.2-3B, OLMoE-1B-7B, Qwen3-32B, Qwen3-30B-A3B; LMSYS-Chat-1M prompts; 1,000 bootstrap streams of
+  250 responses). Seed-blind attack: detected in 100% of streams, median 6–14 responses, 0% benign alarms. The prior
+  per-token hard alarm (Rinberg et al. 2025) missed it and alarmed on ≈100% of benign streams. Seed-aware attack:
+  detected on dense models at higher rates (e.g. Qwen3-32B at 0.0258 bits/token); not detected on the two MoE models.
+- **Limits.** Seed-aware attacks at a few hundredths of a bit per token can evade 250 responses; small secrets can
+  still leak; the guarantee needs calibration to transfer (same prompts, model, hardware, serving stack).
+- **Future work (paper).** An e-process on the continuous fixed-seed likelihood score to catch slower attackers.
+
+## Idea flow
+
+```mermaid
+flowchart LR
+    U[Client prompt] --> S[Production server<br/>Nemotron on TensorRT-LLM / vLLM<br/>committed seed]
+    S -->|response tokens| U
+    S -->|prompt + seed + tokens| V[Trusted verifier<br/>HF Transformers replay]
+    V --> M[Per token: mismatch?<br/>seeded margin]
+    M --> E[7 margin events<br/>per response]
+    C[Trusted benign calibration<br/>Clopper-Pearson bounds] --> P
+    E --> P[E-process<br/>evidence × bet each response]
+    P -->|evidence ≥ 200| A[Alert: possible weight exfiltration<br/>Nemotron-written incident report]
+    P -->|below| N[Keep monitoring<br/>false alarms ≤ 1% forever]
+```
+
+1. **Problem** — model weights can leak through token choices that look normal.
+2. **Why it is hard** — honest GPUs also produce replay mismatches, so single tokens prove nothing.
+3. **Insight** — *where* a mismatch happens (its seeded margin) separates noise from attack.
+4. **Solution** — replay, measure margins, calibrate on trusted traffic, accumulate evidence, alert.
+5. **Guarantee** — anytime-valid: check after every response with a fixed false-alarm budget.
+6. **Next** — reproduce the paper on real models, then extend to the continuous-score e-process.
+
 ## The problem
 
 A compromised LLM inference server can steal the model's weights — or private prompts — by hiding payload bits

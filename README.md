@@ -35,6 +35,19 @@ Anthropic), arXiv:2610.11843, oral at the NeurIPS 2026 workshop "E-Values: From 
   still leak; the guarantee needs calibration to transfer (same prompts, model, hardware, serving stack).
 - **Future work (paper).** An e-process on the continuous fixed-seed likelihood score to catch slower attackers.
 
+## What Team REIGN adds beyond the paper
+
+The paper contributes the detector and its guarantee. Our proposals turn it into a deployable defence:
+
+1. **Drop-in sidecar** — a packaged monitor next to any inference server, with SIEM-ready alerts and an audit log.
+2. **Calibration-drift guard** — the guarantee only holds if calibration transfers. We watch for prompt-distribution
+   or serving-stack changes and trigger stratified recalibration automatically.
+3. **Respond, not just detect** — as evidence rises, automatically withhold top-candidate logprobs and tighten rate
+   limits. The paper notes the attacker's decoder relies on returned logprobs, so this cuts the channel early.
+4. **One view of both sides** — server-side VILLE plus prompt-side NVIDIA garak scans and NeMo Guardrails in one SOC
+   dashboard, with Nemotron-written incident summaries.
+5. **Research extension** — implement and evaluate the continuous-score e-process the paper lists as future work.
+
 ## Idea flow
 
 ```mermaid

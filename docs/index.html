@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VILLE · Team REIGN</title>
+<meta name="description" content="VILLE: Verified Inference Leak Locator using E-values. CyberForge 2026 ideation by Team REIGN.">
+<style>
+  :root { --bg:#FAF8F3; --ink:#1E1E1E; --body:#404040; --muted:#6B6B6B; --accent:#7A1F1F; --rule:#D8D3C8; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.6 Arial, Helvetica, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:56px 20px 72px; }
+  .eyebrow { color:var(--accent); font-size:13px; font-weight:700; letter-spacing:3px; text-transform:uppercase; }
+  h1 { font:400 64px/1.05 Georgia, serif; margin:12px 0 4px; }
+  .sub { font:italic 20px Georgia, serif; color:var(--muted); margin:0 0 24px; }
+  hr { border:0; border-top:2px solid var(--ink); width:80px; margin:24px 0; }
+  p { color:var(--body); }
+  h2 { font:400 26px Georgia, serif; margin:44px 0 12px; }
+  ul { list-style:none; padding:0; margin:0; }
+  li { border-top:1px solid var(--rule); padding:14px 0; }
+  li:last-child { border-bottom:1px solid var(--rule); }
+  a { color:var(--accent); font-weight:700; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .note { display:block; color:var(--muted); font-size:15px; }
+  footer { margin-top:48px; color:var(--muted); font-size:14px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">CyberForge 2026 · Ideation · AI Security</div>
+  <h1>VILLE</h1>
+  <p class="sub">Verified Inference Leak Locator using E-values</p>
+  <p><strong>Team REIGN</strong> · Chittimilla Saitarun · SaiNithin Pokala</p>
+  <hr>
+  <p>A hacked AI inference server can leak its model weights by hiding bits in normal-looking word choices. VILLE replays each prompt on a trusted machine, looks at where the words differ, and adds up the evidence over many responses. It raises an alert while it keeps the chance of any false alarm below 1 percent. The detector comes from recent research. Team REIGN adds a drop-in monitor, automatic recalibration, an automatic response that blocks the data an attacker needs, and one security dashboard.</p>
+
+  <h2>Project</h2>
+  <ul>
+    <li><a href="https://github.com/Nithyon/ville">GitHub repository</a><span class="note">Code, README, paper summary, idea flow and our additions</span></li>
+    <li><a href="VILLE_Team_REIGN_Ideation.pptx">Ideation deck (.pptx)</a><span class="note">The submission slides</span></li>
+  </ul>
+
+  <h2>Research references</h2>
+  <ul>
+    <li><a href="https://arxiv.org/abs/2610.11843">Anytime-valid detection of LLM weight exfiltration</a><span class="note">Ortega-Fernandez, Kowalczyk, Warr (2026). NeurIPS 2026 Workshop E-Values. The main paper VILLE builds on.</span></li>
+    <li><a href="https://arxiv.org/abs/2511.02620">Verifying LLM inference to detect model weight exfiltration</a><span class="note">Rinberg et al. (2025). The threat model and the per-token baseline.</span></li>
+    <li><a href="https://arxiv.org/abs/2511.20621">DiFR: Inference verification despite nondeterminism</a><span class="note">Karvonen et al. (2025). Benign replay mismatches from GPU noise.</span></li>
+  </ul>
+
+  <h2>Tools and data</h2>
+  <ul>
+    <li><a href="https://github.com/NVIDIA/garak">NVIDIA garak</a><span class="note">LLM vulnerability scanner for prompt-side testing</span></li>
+    <li><a href="https://github.com/NVIDIA/NeMo-Guardrails">NVIDIA NeMo Guardrails</a><span class="note">Programmable guardrails for LLM applications</span></li>
+    <li><a href="https://build.nvidia.com/nvidia/safety-for-agentic-ai">NVIDIA Safety for Agentic AI</a><span class="note">NVIDIA reference recipe for AI safety</span></li>
+    <li><a href="https://huggingface.co/datasets/lmsys/lmsys-chat-1m">LMSYS-Chat-1M</a><span class="note">Prompt dataset used in the paper</span></li>
+  </ul>
+
+  <footer>VILLE is independent, unofficial work based on the papers above. All method credit belongs to their authors.</footer>
+</main>
+</body>
+</html>
